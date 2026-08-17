@@ -1,0 +1,18 @@
+/* Next Step Planned Date Group — highlight when Done is selected */
+.next-step-planned-group {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-top: 4px;
+}
+
+.next-step-planned-group label {
+  color: var(--accent-green) !important;
+  font-weight: 600;
+}
+
+.next-step-planned-group .form-hint {
+  color: var(--accent-green);
+  opacity: 0.8;
+}

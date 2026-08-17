@@ -1,0 +1,107 @@
+/* ============================================
+   STEP 4 CSS ADDITIONS
+   Add these to your existing index.css
+   ============================================ */
+
+/* Folder Link Button (in table actions) */
+.btn-folder {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  font-size: 16px;
+  color: var(--accent-green);
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.btn-folder:hover {
+  background: rgba(16, 185, 129, 0.25);
+  border-color: var(--accent-green);
+  transform: translateY(-1px);
+  color: var(--accent-green);
+}
+
+/* Upload Files Button (inside modal, independent of status) */
+.btn-upload-files {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 10px 16px;
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  background: var(--accent-green);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-upload-files:hover:not(:disabled) {
+  background: #059669;
+  transform: translateY(-1px);
+}
+
+.btn-upload-files:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Existing Files Card (shows previously uploaded file links) */
+.existing-files-card {
+  background: var(--bg-tertiary, var(--bg-secondary));
+  border: 1px solid var(--border-primary);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+
+.file-link-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.file-link-row + .file-link-row {
+  border-top: 1px solid var(--border-primary);
+}
+
+.file-link-row a {
+  color: var(--accent-primary);
+  text-decoration: none;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.file-link-row a:hover {
+  text-decoration: underline;
+}
+
+/* Folder link inside lead-info-card */
+.folder-link {
+  color: var(--accent-green) !important;
+  text-decoration: none;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.folder-link:hover {
+  text-decoration: underline;
+}
