@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import api from '../api'; // ✅ API Axios instance import kiya
 import '../assets/InventoryPage.css';
 
 export default function InventoryPage() {
@@ -28,12 +29,12 @@ export default function InventoryPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/inventory');
-      if (!res.ok) throw new Error('Failed to load inventory data');
-      const payload = await res.json();
+      // ✅ Sahi Backend URL se connect kiya
+      const res = await api.get('/inventory');
+      const payload = res.data;
       setData(payload);
       
-      const projects = Object.keys(payload.projectMaster);
+      const projects = Object.keys(payload.projectMaster || {});
       if (projects.length > 0) {
         setSelectedProject(projects[0]);
       } else {
@@ -41,7 +42,7 @@ export default function InventoryPage() {
         if (unitProjects.length > 0) setSelectedProject(unitProjects[0]);
       }
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.message || err.message || 'Failed to load inventory data');
     } finally {
       setLoading(false);
     }
@@ -68,7 +69,7 @@ export default function InventoryPage() {
   };
 
   const filteredUnits = useMemo(() => {
-    return data.units.filter(u => {
+    return (data.units || []).filter(u => {
       if (filters.project && u.project !== filters.project) return false;
       if (filters.status && u.status !== filters.status) return false;
       if (filters.unitType && u.unitType !== filters.unitType) return false;
@@ -105,7 +106,7 @@ export default function InventoryPage() {
     });
   };
 
-  const uniqueValues = (key) => [...new Set(data.units.map(u => u[key]).filter(Boolean))].sort();
+  const uniqueValues = (key) => [...new Set((data.units || []).map(u => u[key]).filter(Boolean))].sort();
 
   const formatRate = (u) => {
     const raw = u.rateRaw ? String(u.rateRaw) : '';
@@ -127,7 +128,7 @@ export default function InventoryPage() {
   }, [filteredUnits]);
 
   const getPlotSizeForProject = (projectName) => {
-    const units = data.units.filter(u => u.project === projectName);
+    const units = (data.units || []).filter(u => u.project === projectName);
     const areas = units.map(u => u.plotArea).filter(Boolean);
     if (areas.length) {
       const min = Math.min(...areas);
@@ -230,8 +231,8 @@ export default function InventoryPage() {
   }
 
   // Get project facts for current selection
-  const pm = data.projectMaster[selectedProject] || {};
-  const pd = data.projectDetails[selectedProject] || {};
+  const pm = data.projectMaster?.[selectedProject] || {};
+  const pd = data.projectDetails?.[selectedProject] || {};
 
   let facts = [];
   const isHeritage = /heritage/i.test(selectedProject);
@@ -252,9 +253,9 @@ export default function InventoryPage() {
   if (pm.possession) facts.push({ label: 'Possession', value: pm.possession });
   if (!facts.length && pd.quickFacts) facts = pd.quickFacts;
 
-  const projectPickerList = Object.keys(data.projectMaster).length > 0 
+  const projectPickerList = Object.keys(data.projectMaster || {}).length > 0 
     ? Object.keys(data.projectMaster) 
-    : [...new Set(data.units.map(u => u.project).filter(Boolean))];
+    : [...new Set((data.units || []).map(u => u.project).filter(Boolean))];
 
   return (
     <div className="inv-body">
@@ -263,7 +264,7 @@ export default function InventoryPage() {
         <div className="inv-topbar">
           <div>
             <h1>Signature Group</h1>
-            <div className="sub">{data.units.length} units across {projectPickerList.length} projects</div>
+            <div className="sub">{(data.units || []).length} units across {projectPickerList.length} projects</div>
           </div>
           <div className="inv-topbar-right">
             <div className="inv-refreshed">
@@ -348,7 +349,7 @@ export default function InventoryPage() {
             </div>
 
             <div style={{ fontSize: '12.5px', color: 'var(--ink-soft)', margin: '10px 2px 0' }}>
-              {sortedUnits.length} of {data.units.length} units shown
+              {sortedUnits.length} of {(data.units || []).length} units shown
             </div>
 
             {/* Table */}
@@ -391,7 +392,7 @@ export default function InventoryPage() {
                       </td>
                       <td className="num">{u.area?.toLocaleString('en-IN')} {u.areaBasis && <small style={{ color: 'var(--ink-soft)' }}>({u.areaBasis})</small>}</td>
                       <td>
-                        <span className={`inv-badge inv-badge-${u.status.toLowerCase()}`}>
+                        <span className={`inv-badge inv-badge-${(u.status || '').toLowerCase()}`}>
                           {u.status}
                         </span>
                       </td>
@@ -413,8 +414,8 @@ export default function InventoryPage() {
             <div className="inv-section-head"><h2>Projects</h2></div>
             <div className="inv-projects">
               {projectPickerList.map(projName => {
-                const info = data.projectMaster[projName] || {};
-                const projUnits = data.units.filter(u => u.project === projName);
+                const info = data.projectMaster?.[projName] || {};
+                const projUnits = (data.units || []).filter(u => u.project === projName);
                 return (
                   <div className="inv-project-card" key={projName}>
                     <h3>{projName}</h3>
@@ -452,7 +453,7 @@ export default function InventoryPage() {
                 <div className="inv-info-header">
                   <h2>{selectedProject}</h2>
                   <div className="loc">
-                    {pm.location || data.units.find(u => u.project === selectedProject)?.location || ''}
+                    {pm.location || (data.units || []).find(u => u.project === selectedProject)?.location || ''}
                   </div>
                 </div>
 
