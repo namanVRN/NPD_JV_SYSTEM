@@ -208,44 +208,44 @@ export default function App() {
   }
 
   // --- BYPASS LOGIN CHECK FOR RAW INVENTORY LOOKUP ---
-  if (currentPath === "/inventory") {
-    return (
-      <div>
-        <div 
-          style={{ 
-            background: "#182234", 
-            padding: "12px 28px", 
-            borderBottom: "2px solid #D9D2C1",
-            display: "flex",
-            alignItems: "center"
-          }}
-        >
-          <button
-            onClick={() => {
-              window.history.pushState({}, "", "/");
-              window.dispatchEvent(new Event("popstate"));
-            }}
-            style={{
-              background: "#a6503a",
-              color: "#ffffff",
-              border: "none",
-              padding: "8px 16px",
-              borderRadius: "4px",
-              cursor: "pointer",
-              fontSize: "13px",
-              fontWeight: "600",
-              display: "flex",
-              alignItems: "center",
-              gap: "6px"
-            }}
-          >
-            <i className="bi bi-arrow-left-circle"></i> Back to Login Panel
-          </button>
-        </div>
-        <InventoryPage />
-      </div>
-    );
-  }
+  // if (currentPath === "/inventory") {
+  //   return (
+  //     <div>
+  //       <div 
+  //         style={{ 
+  //           background: "#182234", 
+  //           padding: "12px 28px", 
+  //           borderBottom: "2px solid #D9D2C1",
+  //           display: "flex",
+  //           alignItems: "center"
+  //         }}
+  //       >
+  //         <button
+  //           onClick={() => {
+  //             window.history.pushState({}, "", "/");
+  //             window.dispatchEvent(new Event("popstate"));
+  //           }}
+  //           style={{
+  //             background: "#a6503a",
+  //             color: "#ffffff",
+  //             border: "none",
+  //             padding: "8px 16px",
+  //             borderRadius: "4px",
+  //             cursor: "pointer",
+  //             fontSize: "13px",
+  //             fontWeight: "600",
+  //             display: "flex",
+  //             alignItems: "center",
+  //             gap: "6px"
+  //           }}
+  //         >
+  //           <i className="bi bi-arrow-left-circle"></i> Back to Login Panel
+  //         </button>
+  //       </div>
+  //       <InventoryPage />
+  //     </div>
+  //   );
+  // }
 
   if (!user) {
     return <LoginPage onLogin={handleLogin} />;
